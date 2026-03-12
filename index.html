@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KissCuff — Love, guided by intelligence.</title>
+
+<!-- SEO -->
+<meta name="description" content="KissCuff is the first AI companion built for couples. Resolve conflicts, write love letters, create wishlists, and keep your memories alive — together.">
+<meta name="keywords" content="couples app, AI for couples, relationship app, love letter generator, conflict resolution, love quizzes, couple wishlist">
+<meta name="author" content="KissCuff">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://kisscuff.com/">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kisscuff.com/">
+<meta property="og:title" content="KissCuff — Love, guided by intelligence.">
+<meta property="og:description" content="The first AI companion built for couples. Resolve conflicts, write love letters, create wishlists, and keep your memories alive — together.">
+<meta property="og:image" content="https://kisscuff.com/kc.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="KissCuff — AI companion for couples">
+<meta property="og:site_name" content="KissCuff">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@kisscuff">
+<meta name="twitter:creator" content="@kisscuff">
+<meta name="twitter:url" content="https://kisscuff.com/">
+<meta name="twitter:title" content="KissCuff — Love, guided by intelligence.">
+<meta name="twitter:description" content="The first AI companion built for couples. Resolve conflicts, write love letters, create wishlists, and keep your memories alive — together.">
+<meta name="twitter:image" content="https://kisscuff.com/kc.png">
+<meta name="twitter:image:alt" content="KissCuff — AI companion for couples">
+
+<!-- Favicon — inline SVG (💋 kiss mark on rose circle) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%23d4826a'/><text y='46' x='10' font-size='40'>💋</text></svg>">
+<link rel="alternate icon" href="data:image/png;base64,iVBORw0KGgo=">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%23d4826a'/><text y='130' x='22' font-size='120'>💋</text></svg>">
+
+<!-- Theme color (browser chrome) -->
+<meta name="theme-color" content="#d4826a">
+<meta name="msapplication-TileColor" content="#d4826a">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #fdf6ee;
+    --blush: #f2c4b2;
+    --rose: #d4826a;
+    --deep: #3b1f18;
+    --gold: #c9a96e;
+    --mist: #e8ddd5;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    color: var(--deep);
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--rose);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.2s, height 0.2s;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--rose);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0.5;
+  }
+
+  /* Animated background mesh */
+  .bg-mesh {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    animation: drift 18s ease-in-out infinite alternate;
+  }
+  .blob-1 { width: 600px; height: 600px; background: var(--blush); top: -150px; left: -100px; animation-delay: 0s; }
+  .blob-2 { width: 400px; height: 400px; background: #f8d5c2; top: 40%; right: -80px; animation-delay: -6s; animation-duration: 14s; }
+  .blob-3 { width: 300px; height: 300px; background: var(--mist); bottom: -50px; left: 30%; animation-delay: -10s; animation-duration: 20s; }
+
+  @keyframes drift {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(30px, -40px) scale(1.05); }
+    100% { transform: translate(-20px, 20px) scale(0.97); }
+  }
+
+  /* Floating hearts */
+  .hearts-container {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .heart {
+    position: absolute;
+    opacity: 0;
+    font-size: 14px;
+    animation: floatUp 8s linear infinite;
+    color: var(--rose);
+  }
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(100vh) rotate(0deg) scale(0.5); }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.2; }
+    100% { opacity: 0; transform: translateY(-10vh) rotate(360deg) scale(1.2); }
+  }
+
+  /* Main layout */
+  .page {
+    position: relative;
+    z-index: 10;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  /* Left panel */
+  .left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 50px 60px 70px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeSlideUp 1s 0.2s forwards;
+  }
+  .logo-icon {
+    width: 34px; height: 34px;
+    background: var(--rose);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .logo-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--deep);
+  }
+
+  .tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 5vw, 68px);
+    line-height: 1.1;
+    font-weight: 300;
+    color: var(--deep);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeSlideUp 1s 0.5s forwards;
+  }
+  .tagline em {
+    font-style: italic;
+    color: var(--rose);
+  }
+
+  .sub {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #7a5a50;
+    max-width: 380px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeSlideUp 1s 0.75s forwards;
+  }
+
+  /* Email form */
+  .form-wrap {
+    display: flex;
+    gap: 0;
+    max-width: 380px;
+    border: 1px solid var(--rose);
+    border-radius: 40px;
+    overflow: hidden;
+    background: white;
+    opacity: 0;
+    animation: fadeSlideUp 1s 1s forwards;
+    box-shadow: 0 8px 32px rgba(212,130,106,0.15);
+  }
+  .form-wrap input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 14px 22px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    background: transparent;
+    color: var(--deep);
+  }
+  .form-wrap input::placeholder { color: #c4a099; }
+  .form-wrap button {
+    background: var(--rose);
+    border: none;
+    padding: 14px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: white;
+    cursor: none;
+    transition: background 0.3s;
+    white-space: nowrap;
+  }
+  .form-wrap button:hover { background: var(--deep); }
+
+  .note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: #b09090;
+    opacity: 0;
+    animation: fadeSlideUp 1s 1.2s forwards;
+  }
+
+  /* Right panel */
+  .right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 60px 70px 60px 40px;
+    gap: 16px;
+  }
+
+  .feature-card {
+    background: white;
+    border: 1px solid rgba(212,130,106,0.2);
+    border-radius: 20px;
+    padding: 20px 26px;
+    width: 100%;
+    max-width: 340px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
+    cursor: none;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .feature-card:hover {
+    transform: translateX(0) translateY(-3px);
+    box-shadow: 0 12px 32px rgba(212,130,106,0.18);
+    border-color: rgba(212,130,106,0.5);
+  }
+  .feature-card.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .card-icon {
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .card-body { flex: 1; }
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--deep);
+    margin-bottom: 3px;
+  }
+  .card-desc {
+    font-size: 12px;
+    color: #9a7a74;
+    line-height: 1.5;
+  }
+  .card-badge {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rose);
+    background: rgba(212,130,106,0.1);
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  /* Divider line */
+  .divider {
+    position: fixed;
+    left: 50%;
+    top: 10%;
+    bottom: 10%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--blush) 30%, var(--blush) 70%, transparent);
+    z-index: 5;
+    opacity: 0;
+    animation: fadeIn 1.5s 1s forwards;
+  }
+
+  /* Bottom bar */
+  .bottom-bar {
+    position: fixed;
+    bottom: 28px;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    z-index: 20;
+    opacity: 0;
+    animation: fadeIn 1.5s 2s forwards;
+  }
+  .countdown-wrap {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .count-item { text-align: center; }
+  .count-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--deep);
+    display: block;
+    line-height: 1;
+  }
+  .count-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #b09090;
+  }
+  .count-sep {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--rose);
+    opacity: 0.5;
+    margin-top: -6px;
+  }
+
+  /* Animations */
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  /* Success state */
+  .success-msg {
+    display: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--rose);
+    margin-top: 16px;
+  }
+  .success-msg.show { display: block; animation: fadeSlideUp 0.5s forwards; }
+
+  /* Responsive */
+  @media (max-width: 800px) {
+    html, body { overflow-y: auto; }
+    .page { grid-template-columns: 1fr; grid-template-rows: auto auto; height: auto; min-height: 100vh; }
+    .left { padding: 60px 32px 32px; }
+    .right { padding: 0 32px 80px; align-items: center; }
+    .feature-card { max-width: 100%; }
+    .divider { display: none; }
+    .bottom-bar { position: relative; bottom: auto; padding-bottom: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="bg-mesh">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<div class="hearts-container" id="heartsContainer"></div>
+
+<div class="divider"></div>
+
+<main class="page">
+  <div class="left">
+    <div class="logo">
+      <div class="logo-icon">💋</div>
+      <div class="logo-text">KissCuff</div>
+    </div>
+
+    <h1 class="tagline">
+      Love, <em>guided</em><br>by intelligence.
+    </h1>
+
+    <p class="sub">
+      The first AI companion built for couples. Resolve conflicts with care, write love letters that move, create wish lists together, and keep your memories alive — forever.
+    </p>
+
+    <div class="form-wrap">
+      <input type="email" id="emailInput" placeholder="your@email.com" />
+      <button onclick="handleSubmit()">Notify Me</button>
+    </div>
+    <p class="note">Be the first to know when we launch. No spam, ever. 🤍</p>
+    <p class="success-msg" id="successMsg">You're on the list — we can't wait to meet you ✨</p>
+  </div>
+
+  <div class="right"></div>
+</main>
+
+
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animateCursor() {
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+// Animate feature cards
+const cards = document.querySelectorAll('.feature-card');
+cards.forEach((card, i) => {
+  setTimeout(() => { card.classList.add('visible'); card.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)'; }, 1400 + i * 150);
+});
+
+// Floating hearts
+const heartsContainer = document.getElementById('heartsContainer');
+const heartEmojis = ['♥', '♡', '💕', '✦', '·'];
+function spawnHeart() {
+  const h = document.createElement('div');
+  h.className = 'heart';
+  h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+  h.style.left = Math.random() * 100 + 'vw';
+  h.style.fontSize = (10 + Math.random() * 12) + 'px';
+  h.style.animationDuration = (7 + Math.random() * 8) + 's';
+  h.style.animationDelay = (Math.random() * 4) + 's';
+  heartsContainer.appendChild(h);
+  setTimeout(() => h.remove(), 16000);
+}
+for (let i = 0; i < 12; i++) setTimeout(spawnHeart, i * 800);
+setInterval(spawnHeart, 2200);
+
+
+
+// Form
+function handleSubmit() {
+  const input = document.getElementById('emailInput');
+  const msg = document.getElementById('successMsg');
+  if (!input.value || !input.value.includes('@')) {
+    input.style.outline = '1px solid #e07070';
+    setTimeout(() => input.style.outline = '', 1500);
+    return;
+  }
+  input.parentElement.style.opacity = '0.5';
+  input.parentElement.style.pointerEvents = 'none';
+  msg.classList.add('show');
+  // spawn burst of hearts
+  for (let i = 0; i < 6; i++) setTimeout(spawnHeart, i * 100);
+}
+
+document.getElementById('emailInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleSubmit();
+});
+</script>
+</body>
+</html>
